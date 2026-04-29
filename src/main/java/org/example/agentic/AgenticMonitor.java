@@ -3,45 +3,99 @@ package org.example.agentic;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+
+class AgentContext {
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private AgenticMonitor.Status status;
+    private String lastAction;
+    public AgenticMonitor.Status getStatus() { return status; }
+    public void setStatus(AgenticMonitor.Status status) { this.status = status; }
+    public String getLastAction() { return lastAction; }
+    public void setLastAction(String lastAction) { this.lastAction = lastAction; this.lastAction += " at " + formatNow(); }
+    public static String formatNow() {
+        return java.time.LocalDateTime.now().format(DATE_FORMATTER);
+    }
+}
+
+interface DecisionEngine {
+    Action decide(String description, double amount, AgentContext context);
+}
+
+class ThresholdDecisionEngine implements DecisionEngine {
+    @Override
+    public Action decide(String description, double amount, AgentContext context) {
+        if (amount > 100) {
+            return new AlertAction(description, amount);
+        } else {
+            return new NoOpAction(description, amount);
+        }
+    }
+}
+
+interface Action {
+    void execute(AgentContext context);
+}
+
+class AlertAction implements Action {
+    private final String description;
+    private final double amount;
+    public AlertAction(String description, double amount) {
+        this.description = description;
+        this.amount = amount;
+    }
+    @Override
+    public void execute(AgentContext context) {
+        context.setLastAction("ALERT: Expense '" + description + "' exceeds 100 (" + amount + ")  " );
+        context.setStatus(AgenticMonitor.Status.ACTION_TAKEN);
+    }
+}
+
+class NoOpAction implements Action {
+    private final String description;
+    private final double amount;
+    public NoOpAction(String description, double amount) {
+        this.description = description;
+        this.amount = amount;
+    }
+    @Override
+    public void execute(AgentContext context) {
+        context.setLastAction("NO_ALERT: Expense '" + description + "' is within limit (" + amount + ") " );
+        context.setStatus(AgenticMonitor.Status.ACTION_TAKEN);
+    }
+}
 
 @EnableAsync
 @Service
 public class AgenticMonitor {
     public enum Status { IDLE, RUNNING, ACTION_TAKEN, ERROR }
 
-    private final AtomicReference<Status> status = new AtomicReference<>(Status.IDLE);
-    private final AtomicReference<String> lastAction = new AtomicReference<>("");
+    private final AtomicReference<AgentContext> context = new AtomicReference<>(new AgentContext());
+    private final DecisionEngine decisionEngine = new ThresholdDecisionEngine();
 
     public Status getStatus() {
-        return status.get();
+        return context.get().getStatus();
     }
     public String getLastAction() {
-        return lastAction.get();
+        return context.get().getLastAction();
     }
 
     @Async
     public CompletableFuture<Void> monitorExpense(String description, double amount) {
-        status.set(Status.RUNNING);
+        AgentContext ctx = new AgentContext();
+        ctx.setStatus(Status.RUNNING);
         try {
-            // Decision logic: trigger alert if amount > 100
-            if (amount > 100) {
-                performAction("ALERT: Expense '" + description + "' exceeds 100 (" + amount + ")");
-            } else {
-                performAction("NO_ALERT: Expense '" + description + "' is within limit (" + amount + ")");
-            }
-            status.set(Status.ACTION_TAKEN);
+            Action action = decisionEngine.decide(description, amount, ctx);
+            action.execute(ctx);
         } catch (Exception e) {
-            status.set(Status.ERROR);
-            lastAction.set("ERROR: " + e.getMessage());
+            ctx.setStatus(Status.ERROR);
+            ctx.setLastAction("ERROR: " + e.getMessage());
         }
+        context.set(ctx);
         return CompletableFuture.completedFuture(null);
-    }
-
-    private void performAction(String action) {
-        // Simulate an action (could be API call, DB update, etc.)
-        lastAction.set(action + " at " + java.time.LocalDateTime.now());
-        // Add real action logic here
     }
 }
