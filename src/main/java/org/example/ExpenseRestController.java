@@ -17,8 +17,8 @@ public class ExpenseRestController {
     }
 
     @PostMapping
-    public void addExpense(@RequestBody Expense expense) {
-        service.addExpense(expense);
+    public Expense addExpense(@RequestBody Expense expense) {
+        return service.addExpense(expense);
     }
 
     @GetMapping("/total")
@@ -31,4 +31,3 @@ public class ExpenseRestController {
         service.clear();
     }
 }
-

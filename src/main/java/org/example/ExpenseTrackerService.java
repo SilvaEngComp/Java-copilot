@@ -1,29 +1,28 @@
 package org.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class ExpenseTrackerService {
-    private final List<Expense> expenses = new ArrayList<>();
+    @Autowired
+    private ExpenseRepository repository;
 
-    public void addExpense(Expense expense) {
-        expenses.add(expense);
+    public Expense addExpense(Expense expense) {
+        return repository.save(expense);
     }
 
     public List<Expense> getExpenses() {
-        return Collections.unmodifiableList(expenses);
+        return repository.findAll();
     }
 
     public double getTotal() {
-        return expenses.stream().mapToDouble(Expense::getAmount).sum();
+        return repository.findAll().stream().mapToDouble(Expense::getAmount).sum();
     }
 
     public void clear() {
-        expenses.clear();
+        repository.deleteAll();
     }
 }
-
