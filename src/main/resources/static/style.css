@@ -1,10 +1,10 @@
-body { font-family: Arial, sans-serif; margin: 2em; }
-.total { margin-top: 1em; font-weight: bold; }
-th { background: #f2f2f2; }
-th, td { border: 1px solid #ddd; padding: 0.5em; text-align: left; }
-table { width: 100%; border-collapse: collapse; margin-top: 1em; }
-code { background: #eee; padding: 2px 4px; border-radius: 3px; }
+/* Remove or comment out rules that conflict with Bootstrap */
+/* body { font-family: Arial, sans-serif; margin: 2em; } */
+/* th { background: #f2f2f2; } */
+/* th, td { border: 1px solid #ddd; padding: 0.5em; text-align: left; } */
+/* table { width: 100%; border-collapse: collapse; margin-top: 1em; } */
+/*code { background: #eee; padding: 2px 4px; border-radius: 3px; }
 .api-list { background: #f9f9f9; border: 1px solid #ddd; padding: 1em; }
 .info { margin-top: 1em; }
 h2 { color: #333; }
-
+.total { margin-top: 1em; font-weight: bold; }*/
