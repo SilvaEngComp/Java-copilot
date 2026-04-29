@@ -9,15 +9,16 @@ public class AgenticMonitorController {
     @Autowired
     private AgenticMonitor monitor;
 
-    @PostMapping("/monitor")
-    public String monitor(@RequestParam String input) {
-        monitor.monitorInput(input);
-        return "Monitoring started for input: " + input;
+    // New endpoint for monitoring an expense
+    @PostMapping("/monitor-expense")
+    public String monitorExpense(@RequestParam String description, @RequestParam double amount) {
+        monitor.monitorExpense(description, amount);
+        return "Monitoring started for expense: '" + description + "' with amount: " + amount;
     }
+
 
     @GetMapping("/status")
     public String status() {
         return "Status: " + monitor.getStatus() + ", Last Action: " + monitor.getLastAction();
     }
 }
-

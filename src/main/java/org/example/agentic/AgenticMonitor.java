@@ -22,14 +22,14 @@ public class AgenticMonitor {
     }
 
     @Async
-    public CompletableFuture<Void> monitorInput(String input) {
+    public CompletableFuture<Void> monitorExpense(String description, double amount) {
         status.set(Status.RUNNING);
         try {
-            // Simulate decision logic
-            if (input != null && input.toLowerCase().contains("alert")) {
-                performAction("ALERT_TRIGGERED");
+            // Decision logic: trigger alert if amount > 100
+            if (amount > 100) {
+                performAction("ALERT: Expense '" + description + "' exceeds 100 (" + amount + ")");
             } else {
-                performAction("NO_ACTION");
+                performAction("NO_ALERT: Expense '" + description + "' is within limit (" + amount + ")");
             }
             status.set(Status.ACTION_TAKEN);
         } catch (Exception e) {
@@ -45,4 +45,3 @@ public class AgenticMonitor {
         // Add real action logic here
     }
 }
-

@@ -10,6 +10,8 @@ import java.util.List;
 public class ExpenseRestController {
     @Autowired
     private ExpenseTrackerService service;
+    @Autowired
+    private org.example.agentic.AgenticMonitor agenticMonitor;
 
     @GetMapping
     public List<Expense> getExpenses() {
@@ -18,6 +20,8 @@ public class ExpenseRestController {
 
     @PostMapping
     public Expense addExpense(@RequestBody Expense expense) {
+        // Call the agentic monitor asynchronously when adding an expense
+        agenticMonitor.monitorExpense(expense.getDescription(), expense.getAmount());
         return service.addExpense(expense);
     }
 
