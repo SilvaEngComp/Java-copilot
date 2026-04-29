@@ -1,42 +1,53 @@
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+# Ignore all IDE/editor/project metadata
+.idea/
 *.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+*.iws
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+.vscode/
+.DS_Store
+Thumbs.db
 
-### Eclipse ###
-.apt_generated
+# Ignore build output and dependency caches
+.gradle/
+build/
+out/
+bin/
+dist/
+nbbuild/
+nbdist/
+
+# Ignore Eclipse/NetBeans/VSCode/other project files
+.apt_generated/
 .classpath
 .factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
-bin/
+.settings/
+.springBeans/
+.sts4-cache/
+
+# Ignore OS-specific files
+.DS_Store
+
+# Allow gradle wrapper jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Allow build/output folders inside source
+!**/src/main/**/build/
+!**/src/test/**/build/
+!**/src/main/**/out/
+!**/src/test/**/out/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Spring Boot specific
+!src/main/resources/
+!src/main/resources/templates/
+!src/main/resources/static/
 
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
+# Remove old Swing UI from version control
+src/main/java/org/example/ExpenseTrackerUI.java

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        h2 { color: #333; }
+        .info { margin-top: 1em; }
+        .api-list { background: #f9f9f9; border: 1px solid #ddd; padding: 1em; }
+        code { background: #eee; padding: 2px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h2>Expense Tracker REST API</h2>
+    <div class="info">
+        <p>This is a backend REST API. You can interact with it using tools like <b>curl</b>, <b>Postman</b>, or your browser for GET endpoints.</p>
+        <div class="api-list">
+            <ul>
+                <li><b>List expenses:</b> <code>GET /api/expenses</code></li>
+                <li><b>Add expense:</b> <code>POST /api/expenses</code> (JSON: {"description":..., "amount":...})</li>
+                <li><b>Total expenses:</b> <code>GET /api/expenses/total</code></li>
+                <li><b>Clear expenses:</b> <code>DELETE /api/expenses</code></li>
+            </ul>
+        </div>
+        <p>Example: <code>curl -X POST -H "Content-Type: application/json" -d '{"description":"Coffee","amount":3.5}' http://localhost:8080/api/expenses</code></p>
+    </div>
+</body>
+</html>
+
