@@ -30,4 +30,14 @@ public class ExpenseRestController {
     public void clearExpenses() {
         service.clear();
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteExpense(@PathVariable Long id) {
+        service.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Expense updateExpense(@PathVariable Long id, @RequestBody Expense expense) {
+        return service.updateExpense(id, expense);
+    }
 }
